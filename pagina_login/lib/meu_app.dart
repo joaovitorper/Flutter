@@ -11,7 +11,7 @@ class MeuApp extends StatelessWidget {
       home:LoginPages(),
       theme:ThemeData(
         primarySwatch: Colors.indigo,
-        textTheme: GoogleFonts. interTextTheme()
+        textTheme: GoogleFonts.interTextTheme()
 
       ),
       
