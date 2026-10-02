@@ -9,6 +9,7 @@ class LoginPages extends StatefulWidget {
 }
 
 class _LoginPagesState extends State<LoginPages> {
+  final TextEditingController nomeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,7 +17,7 @@ class _LoginPagesState extends State<LoginPages> {
         backgroundColor: Color.fromARGB(255, 211, 215, 250),
         body: Container(
           width: double.infinity,
-          padding: EdgeInsets.fromLTRB(40, 100, 40, 200),
+          padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -30,72 +31,54 @@ class _LoginPagesState extends State<LoginPages> {
               Column(
                 spacing: 20,
                 children: [
-                  Container(
-                    // input email
-                    width: double.infinity,
-                    padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
-                    decoration: BoxDecoration(
-                   color: Color(0xFFE5E6F2),
-                   borderRadius: BorderRadius.circular(3), 
-                   border: Border.all(
-                    color: Color(0xff535B9E),
-                    width: 0.2,
-                    
-                    
-                   )
-                    ),
-                    child: Text("Digite Seu Email",
-                     style: GoogleFonts.inter(fontSize: 20,fontWeight: FontWeight(400),
-                     ),
-                    
-                  ),
-                  ),
-                  Container(
-                    // input senha 
-                    width: double.infinity,
-                    padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
-                    decoration: BoxDecoration(
-                   color: Color(0xFFE5E6F2),
-                   borderRadius: BorderRadius.circular(3), 
-                   border: Border.all(
-                    color: Color(0xff535B9E),
-                    width: 0.2,
-                    
-                    
-                   )
-                    ),
-                    child: Text("Digite Sua Senha",
-                     style: GoogleFonts.inter(fontSize: 20,fontWeight: FontWeight(400),
-                     ),
-                  
-                    
-                  ),
-                  ),
+                TextField(
+                controller: nomeController,
+                decoration: const InputDecoration(
+                hintText: 'Digite seu nome',
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+
+                 
+                TextField(
+                controller: nomeController,
+                decoration: const InputDecoration(
+                hintText: 'Digite sua Senha',
+                border: OutlineInputBorder(),
+              ),
+            ),
+
                 ],
               ),
               Column(
                 spacing: 40,
                 children: [
-                  Container(
-                    // Botão Login
-                    padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
-                    decoration: BoxDecoration(
-                   color: Color(0xff244977),
-                   borderRadius: BorderRadius.circular(10), 
-                   border: Border.all(
-                    color: Color(0xff535B9E),
-                    width: 0.2,
-                    
-                    
-                   )
+                
+                // BOTÃO CONTINUAR
+            SizedBox(
+              height: 50,
+              child: OutlinedButton(
+                onPressed: () {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SegundaTela(),
                     ),
-                    child: Text("Login",
-                     style: GoogleFonts.inter(fontSize: 24,fontWeight: FontWeight(800), color: Color(0xffffffff)
-                     ),
-                  
-                    
+                  );
+
+                },
+
+                child: const Text(
+                  'CONTINUAR',
+                  style: TextStyle(
+                    fontSize: 16,
                   ),
-                  ),
+                ),
+              ),
+            ),
+
                   //Botão cadastro
                   Text("Cadastro",
                    style: GoogleFonts.inter(
@@ -110,6 +93,80 @@ class _LoginPagesState extends State<LoginPages> {
               ),                
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+class SegundaTela extends StatelessWidget {
+  const SegundaTela({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Segunda Tela'),
+        centerTitle: true,
+      ),
+
+      body: Padding(
+        padding: const EdgeInsets.all(30),
+
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+
+          children: [
+
+            const Text(
+              '🎉',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 60,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Text(
+              'Você chegou à segunda tela!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            const Text(
+              'Essa tela foi aberta através de uma ação do usuário.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+
+                  Navigator.pop(context);
+
+                },
+
+                child: const Text(
+                  'VOLTAR',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
