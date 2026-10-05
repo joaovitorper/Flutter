@@ -10,6 +10,8 @@ class LoginPages extends StatefulWidget {
 
 class _LoginPagesState extends State<LoginPages> {
   final TextEditingController nomeController = TextEditingController();
+  final TextEditingController senhaController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,7 +44,7 @@ class _LoginPagesState extends State<LoginPages> {
 
                  
                 TextField(
-                controller: nomeController,
+                controller: senhaController,
                 decoration: const InputDecoration(
                 hintText: 'Digite sua Senha',
                 border: OutlineInputBorder(),
@@ -55,7 +57,7 @@ class _LoginPagesState extends State<LoginPages> {
                 spacing: 40,
                 children: [
                 
-                // BOTÃO CONTINUAR
+                // BOTÃO Login 
             SizedBox(
               height: 50,
               child: OutlinedButton(
@@ -71,7 +73,7 @@ class _LoginPagesState extends State<LoginPages> {
                 },
 
                 child: const Text(
-                  'CONTINUAR',
+                    'LOGIN',
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -104,7 +106,8 @@ class SegundaTela extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor: Color.fromARGB(255, 225, 235, 255), 
+     appBar: AppBar(
         title: const Text('Segunda Tela'),
         centerTitle: true,
       ),
