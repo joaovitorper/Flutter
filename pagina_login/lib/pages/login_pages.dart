@@ -115,6 +115,8 @@ class SegundaTela extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(30),
 
+        
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
