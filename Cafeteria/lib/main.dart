@@ -39,7 +39,7 @@ void initState(){
 }
 
 Future<List<dynamic>> buscarUsuarios() async{
-  final url = Uri.parse('https://jasnplaceholder.typicode.com/users');
+  final url = Uri.parse('https://jsonplaceholder.typicode.com/users');
  
   final resposta = await http.get(url);
 
