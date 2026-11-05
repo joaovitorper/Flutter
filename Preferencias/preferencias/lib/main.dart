@@ -1,64 +1,43 @@
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-// NOVO: Importa as funções de salvar e ler arquivos
 import 'arquivo_dados.dart';
-
 
 void main() {
   runApp(
     const MaterialApp(
-      home: TelaPreferencias(),
       debugShowCheckedModeBanner: false,
+      home: TelaPreferencias(),
     ),
   );
 }
 
-
 class TelaPreferencias extends StatefulWidget {
   const TelaPreferencias({super.key});
-
 
   @override
   State<TelaPreferencias> createState() => _TelaPreferenciasState();
 }
 
-
 class _TelaPreferenciasState extends State<TelaPreferencias> {
   final TextEditingController nomeController = TextEditingController();
-
-
-  String nomeSalvo = '';
-
-
-  // NOVO: Controller para digitar o conteúdo do relatório
   final TextEditingController relatorioController = TextEditingController();
 
-
-  // NOVO: Variável para armazenar o conteúdo lido do arquivo
+  String nomeSalvo = '';
   String conteudoArquivo = '';
-
-
-  // SHARED PREFERENCES
-
 
   Future<void> salvarNome() async {
     final preferencias = await SharedPreferences.getInstance();
 
-
     await preferencias.setString('nomeUsuario', nomeController.text);
-
 
     setState(() {
       nomeSalvo = nomeController.text;
     });
   }
 
-
   Future<void> carregarNome() async {
     final preferencias = await SharedPreferences.getInstance();
-
 
     setState(() {
       nomeSalvo = preferencias.getString('nomeUsuario') ?? '';
@@ -66,23 +45,37 @@ class _TelaPreferenciasState extends State<TelaPreferencias> {
     });
   }
 
-
-  // NOVO: Função que envia o texto para ser salvo no arquivo
   Future<void> salvarRelatorio() async {
-    await salvarArquivo(relatorioController.text);
+    try {
+      await salvarArquivo(relatorioController.text);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Relatório salvo com sucesso!')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao salvar: $e')),
+      );
+    }
   }
 
-
-  // NOVO: Função que recupera o conteúdo do arquivo
   Future<void> carregarRelatorio() async {
-    final conteudo = await lerArquivo();
+    try {
+      final conteudo = await lerArquivo();
 
-
-    setState(() {
-      conteudoArquivo = conteudo;
-    });
+      setState(() {
+        conteudoArquivo = conteudo;
+      });
+    } catch (e) {
+      setState(() {
+        conteudoArquivo = 'Erro ao ler relatório: $e';
+      });
+    }
   }
-
 
   @override
   void initState() {
@@ -90,77 +83,144 @@ class _TelaPreferenciasState extends State<TelaPreferencias> {
     carregarNome();
   }
 
-
   @override
   void dispose() {
     nomeController.dispose();
-
-
-    // NOVO: Libera o controller do relatório
     relatorioController.dispose();
-
-
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Preferências')),
-      body: Padding(
+      appBar: AppBar(
+        title: const Text('Minhas Preferências'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+      ),
+
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
+
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: nomeController,
-              decoration: const InputDecoration(labelText: 'Digite seu nome'),
-            ),
-            const SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: salvarNome,
-              child: const Text('Salvar nome'),
-            ),
-            Text('Nome salvo: $nomeSalvo'),
 
-
-            // NOVO: Campo para digitar o relatório
-            const Divider(height: 40),
             const Text(
-              'Armazenamento em arquivos',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-
-
-            TextField(
-              controller: relatorioController,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Digite o relatório',
-                border: OutlineInputBorder(),
+              'Dados do usuário',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
             ),
 
+            const SizedBox(height: 20),
+
+            TextField(
+              controller: nomeController,
+              decoration: const InputDecoration(
+                labelText: 'Digite seu nome',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: salvarNome,
+                icon: const Icon(Icons.save),
+                label: const Text('Salvar nome'),
+              ),
+            ),
 
             const SizedBox(height: 15),
 
+            Text(
+              'Nome salvo: $nomeSalvo',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
 
-            // NOVO: Botão para salvar o relatório no arquivo TXT
-            ElevatedButton(
+            const Divider(height: 45),
+
+            const Text(
+              'Armazenamento em arquivos',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            TextField(
+              controller: relatorioController,
+              maxLines: 4,
+              decoration: const InputDecoration(
+                labelText: 'Digite o relatório',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.description),
+                alignLabelWithHint: true,
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            ElevatedButton.icon(
               onPressed: salvarRelatorio,
-              child: const Text('Salvar relatório'),
+              icon: const Icon(Icons.save),
+              label: const Text('Salvar relatório'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.all(15),
+              ),
             ),
 
+            const SizedBox(height: 15),
 
-            // NOVO: Botão para ler o arquivo TXT
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: carregarRelatorio,
-              child: const Text('Ler relatório'),
+              icon: const Icon(Icons.folder_open),
+              label: const Text('Ler relatório'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.all(15),
+              ),
             ),
 
+            const SizedBox(height: 25),
 
-            // NOVO: Exibe na tela o conteúdo recuperado
-            Text('Conteúdo do arquivo: $conteudoArquivo'),
+            const Text(
+              'Conteúdo do arquivo:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: Text(
+                conteudoArquivo.isEmpty
+                    ? 'Nenhum relatório carregado.'
+                    : conteudoArquivo,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
           ],
         ),
       ),
